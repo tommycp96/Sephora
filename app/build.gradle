@@ -98,7 +98,8 @@ dependencies {
 
     // Coil
     implementation "io.coil-kt:coil:1.1.1"
-    implementation "com.google.accompanist:accompanist-coil:0.10.0"
+    //noinspection GradleDependency
+    implementation "com.google.accompanist:accompanist-coil:0.7.0"
 
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
