@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.tcp.sephora.productlist.ProductListScreen
 import com.tcp.sephora.ui.theme.SephoraTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     startDestination = "product_list_screen"
                 ) {
                     composable("product_list_screen") {
-
+                        ProductListScreen(navController = navController)
                     }
                     composable(
                         "product_detail_screen/{productId}",
