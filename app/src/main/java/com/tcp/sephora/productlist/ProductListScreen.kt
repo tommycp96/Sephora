@@ -1,6 +1,5 @@
 package com.tcp.sephora.productlist
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,17 +14,14 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.transform.CircleCropTransformation
@@ -34,7 +30,7 @@ import com.google.accompanist.imageloading.ShouldRefetchOnSizeChange
 import com.tcp.sephora.data.models.ProductListEntry
 import com.tcp.sephora.R
 import com.tcp.sephora.ui.theme.RobotoCondensed
-import timber.log.Timber
+import java.util.*
 
 @Composable
 fun ProductListScreen(
@@ -159,8 +155,9 @@ fun ProductEntry(
             .aspectRatio(1f)
             .background(Color.White)
             .clickable {
+                val ROUTE_PRODUCT_DETAILS = "product_detail_screen/${entry.productName}/${entry.brandName}/${entry.productRating.toString()}/${entry.displayOriginalPrice}/${entry.displayDiscountPrice}/${entry.description.toString()}/${entry.imageUrl.toString()}"
                 navController.navigate(
-                    "product_detail_screen/${entry.productId}"
+                    "product_detail_screen/${entry.productName}"
                 )
             }
     ) {

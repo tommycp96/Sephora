@@ -8,5 +8,9 @@ data class ProductListEntry(
     val productRating: Double,
     val variantsCount: Int,
     val reviewsCount: Int,
-    val imageUrl: String
+    val imageUrl: String,
+    val discountPrice: Int,
+    val displayOriginalPrice: String,
+    val displayDiscountPrice: String,
+    val description: String
 )

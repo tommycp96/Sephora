@@ -3,9 +3,6 @@ package com.tcp.sephora
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
@@ -14,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.tcp.sephora.productdetail.ProductDetailScreen
 import com.tcp.sephora.productlist.ProductListScreen
 import com.tcp.sephora.ui.theme.SephoraTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,16 +31,20 @@ class MainActivity : ComponentActivity() {
                         ProductListScreen(navController = navController)
                     }
                     composable(
-                        "product_detail_screen/{productId}",
+                        "product_detail_screen/{productName}",
                         arguments = listOf(
-                            navArgument("productId") {
+                            navArgument("productName") {
                                 type = NavType.StringType
                             }
                         )
                     ) {
-                        val productId = remember {
-                            it.arguments?.getString("productId")
+                        val productName = remember {
+                            it.arguments?.getString("productName")
                         }
+                        ProductDetailScreen(
+                            productName = productName ?: "",
+                            navController = navController
+                        )
                     }
                 }
             }

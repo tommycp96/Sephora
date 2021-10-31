@@ -83,7 +83,11 @@ class ProductListViewModel @Inject constructor(
                             entry.attributes.rating,
                             entry.attributes.variantsCount,
                             entry.attributes.reviewsCount,
-                            entry.attributes.defaultImageUrls.first()
+                            entry.attributes.defaultImageUrls.first(),
+                            entry.attributes.price,
+                            entry.attributes.displayOriginalPrice,
+                            entry.attributes.displayPrice,
+                            entry.attributes.description
                         )
                     }
                     curPage++
