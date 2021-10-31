@@ -13,6 +13,7 @@ import com.tcp.sephora.util.Constants.PAGE_SIZE
 import com.tcp.sephora.util.Constants.SORT
 import com.tcp.sephora.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -28,8 +29,38 @@ class ProductListViewModel @Inject constructor(
     var isLoading = mutableStateOf(false)
     var endReached = mutableStateOf(false)
 
+    private var cachedProductList = listOf<ProductListEntry>()
+    private var isSearchStarting = true
+    var isSearching = mutableStateOf(false)
+
     init {
         loadProductPaginated()
+    }
+
+    fun searchPokemonList(query: String) {
+        val listToSearch = if(isSearchStarting) {
+            productList.value
+        } else {
+            cachedProductList
+        }
+        viewModelScope.launch(Dispatchers.Default) {
+            if(query.isEmpty()) {
+                productList.value = cachedProductList
+                isSearching.value = false
+                isSearchStarting = true
+                return@launch
+            }
+            val results = listToSearch.filter {
+                it.productName.contains(query.trim(), ignoreCase = true) ||
+                        it.brandName.contains(query.trim(), ignoreCase = true)
+            }
+            if(isSearchStarting) {
+                cachedProductList = productList.value
+                isSearchStarting = false
+            }
+            productList.value = results
+            isSearching.value = true
+        }
     }
 
     fun loadProductPaginated() {

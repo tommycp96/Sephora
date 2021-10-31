@@ -38,7 +38,8 @@ import timber.log.Timber
 
 @Composable
 fun ProductListScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: ProductListViewModel = hiltViewModel()
 ) {
     Surface(
         color = MaterialTheme.colors.background,
@@ -52,7 +53,7 @@ fun ProductListScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-
+                viewModel.searchPokemonList(it)
             }
             Spacer(modifier = Modifier.height(16.dp))
             ProductList(navController = navController)
@@ -69,6 +70,7 @@ fun ProductList(
     val endReached by remember { viewModel.endReached }
     val loadError by remember { viewModel.loadError }
     val isLoading by remember { viewModel.isLoading }
+    val isSearching by remember { viewModel.isSearching }
 
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
         val itemCount = if(productList.size % 2 == 0) {
@@ -77,7 +79,7 @@ fun ProductList(
             productList.size / 2 + 1
         }
         items(itemCount) {
-            if(it >= itemCount - 1 && !endReached) {
+            if(it >= itemCount - 1 && !endReached && !isLoading && !isSearching) {
                 viewModel.loadProductPaginated()
             }
             ProductRow(rowIndex = it, entries = productList, navController = navController)
@@ -129,7 +131,7 @@ fun SearchBar(
                 .background(Color.White, CircleShape)
                 .padding(horizontal = 20.dp, vertical = 12.dp)
                 .onFocusChanged {
-                    isHintDisplayed = !it.isFocused
+                    isHintDisplayed = !it.isFocused && text.isEmpty()
                 }
         )
         if(isHintDisplayed) {
