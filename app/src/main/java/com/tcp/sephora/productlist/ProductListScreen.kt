@@ -30,7 +30,8 @@ import com.google.accompanist.imageloading.ShouldRefetchOnSizeChange
 import com.tcp.sephora.data.models.ProductListEntry
 import com.tcp.sephora.R
 import com.tcp.sephora.ui.theme.RobotoCondensed
-import java.util.*
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun ProductListScreen(
@@ -155,9 +156,15 @@ fun ProductEntry(
             .aspectRatio(1f)
             .background(Color.White)
             .clickable {
-                val ROUTE_PRODUCT_DETAILS = "product_detail_screen/${entry.productName}/${entry.brandName}/${entry.productRating.toString()}/${entry.displayOriginalPrice}/${entry.displayDiscountPrice}/${entry.description.toString()}/${entry.imageUrl.toString()}"
+                // important note: before passing args to the navigate function
+                // please be aware that need to replace/encode the URL or a string that contains "/"
+                val productName = URLEncoder.encode(entry.productName, StandardCharsets.UTF_8.toString())
+                val brandName = URLEncoder.encode(entry.brandName, StandardCharsets.UTF_8.toString())
+                val imageUrl = URLEncoder.encode(entry.imageUrl, StandardCharsets.UTF_8.toString())
+                val description = URLEncoder.encode(entry.description, StandardCharsets.UTF_8.toString())
+                val ROUTE_PRODUCT_DETAILS = "product_detail_screen/${productName}/${brandName}/${entry.productRating}/${entry.displayOriginalPrice}/${entry.displayDiscountPrice}/${imageUrl}/${description}"
                 navController.navigate(
-                    "product_detail_screen/${entry.productName}"
+                    route = ROUTE_PRODUCT_DETAILS
                 )
             }
     ) {
