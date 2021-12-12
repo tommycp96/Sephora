@@ -1,8 +1,6 @@
 package com.tcp.sephora.productdetail
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -24,6 +22,8 @@ import androidx.navigation.NavController
 import coil.transform.CircleCropTransformation
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ShouldRefetchOnSizeChange
+import com.gowtham.ratingbar.RatingBar
+import com.gowtham.ratingbar.RatingBarStyle
 import com.tcp.sephora.R
 import com.tcp.sephora.ui.theme.RobotoCondensed
 import java.net.URLDecoder
@@ -42,12 +42,17 @@ fun ProductDetailScreen(
     navController: NavController,
     topPadding: Dp = 20.dp
 ) {
+    val decodedProductName = URLDecoder.decode(productName, StandardCharsets.UTF_8.toString())
+    val decodedBrandName = URLDecoder.decode(brandName, StandardCharsets.UTF_8.toString())
+    val decodedImageUrl = URLDecoder.decode(imageUrl, StandardCharsets.UTF_8.toString())
     val decodedDescription = URLDecoder.decode(description, StandardCharsets.UTF_8.toString())
+    var rating: Float = productRating.toFloat()
 
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color.White)
         .padding(bottom = 16.dp)
+        .verticalScroll(rememberScrollState())
     ) {
         ProductDetailTopSection(
             navController = navController,
@@ -58,7 +63,7 @@ fun ProductDetailScreen(
         )
         Image(
             painter = rememberCoilPainter(
-                request = imageUrl,
+                request = decodedImageUrl,
                 requestBuilder = {
                     transformations(CircleCropTransformation())
                 },
@@ -66,74 +71,68 @@ fun ProductDetailScreen(
                 fadeIn = true,
                 previewPlaceholder = R.drawable.placeholder
             ),
-            contentDescription = productName,
+            contentDescription = decodedProductName,
             modifier = Modifier
                 .size(productImageSize)
                 .align(TopCenter)
-        )
-        Text(
-            text = productName,
-            fontFamily = RobotoCondensed,
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 64.dp)
         )
         Column(
             modifier = Modifier
                 .padding(top = 116.dp)
         ){
             Text(
-                text = URLDecoder.decode(brandName, StandardCharsets.UTF_8.toString()),
+                text = decodedProductName,
                 fontFamily = RobotoCondensed,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(top = 88.dp, bottom = 8.dp)
             )
             Text(
-                text = "Rating: $productRating",
+                text = "Brand: $decodedBrandName",
                 fontFamily = RobotoCondensed,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Start,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 2.dp, horizontal = 8.dp)
             )
+            RatingBar(
+                Modifier.padding(horizontal = 8.dp),
+                activeColor = Color(0xFFD81B60),
+                value = rating,
+                ratingBarStyle = RatingBarStyle.HighLighted, onValueChange = {
+                    rating = it
+                }
+            ) {}
             Text(
                 text = "Original Price: $displayOriginalPrice",
                 fontFamily = RobotoCondensed,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Start,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 2.dp, horizontal = 8.dp)
             )
             Text(
                 text = "Discount Price: $displayDiscountPrice",
                 fontFamily = RobotoCondensed,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Start,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 2.dp, horizontal = 8.dp)
             )
             Text(
                 text = HtmlCompat.fromHtml(decodedDescription, HtmlCompat.FROM_HTML_MODE_LEGACY).toString(),
                 fontFamily = RobotoCondensed,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Justify,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp, horizontal = 8.dp)
             )
         }
     }
@@ -159,7 +158,7 @@ fun ProductDetailTopSection(
         Icon(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = null,
-            tint = Color.White,
+            tint = Color.Gray,
             modifier = Modifier
                 .size(36.dp)
                 .offset(16.dp, 16.dp)

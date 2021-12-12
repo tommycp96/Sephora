@@ -27,6 +27,8 @@ import androidx.navigation.NavController
 import coil.transform.CircleCropTransformation
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ShouldRefetchOnSizeChange
+import com.gowtham.ratingbar.RatingBar
+import com.gowtham.ratingbar.RatingBarStyle
 import com.tcp.sephora.data.models.ProductListEntry
 import com.tcp.sephora.R
 import com.tcp.sephora.ui.theme.RobotoCondensed
@@ -148,6 +150,8 @@ fun ProductEntry(
     modifier: Modifier = Modifier,
     viewModel: ProductListViewModel = hiltViewModel()
 ) {
+    var rating: Float = entry.productRating.toFloat()
+
     Box(
         contentAlignment = Center,
         modifier = modifier
@@ -212,15 +216,15 @@ fun ProductEntry(
                     .fillMaxWidth()
                     .padding(start = 8.dp)
             )
-            Text(
-                text = entry.productRating.toString(),
-                fontFamily = RobotoCondensed,
-                fontSize = 10.sp,
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp)
-            )
+            RatingBar(
+                Modifier.padding(horizontal = 8.dp),
+                activeColor = Color(0xFFD81B60),
+                size = 12.dp,
+                value = rating,
+                ratingBarStyle = RatingBarStyle.HighLighted, onValueChange = {
+                    rating = it
+                }
+            ) {}
             Text(
                 text = entry.variantsCount.toString() + " variants",
                 fontFamily = RobotoCondensed,
